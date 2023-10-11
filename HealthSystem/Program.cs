@@ -12,6 +12,7 @@ namespace HealthSystem
         {
             Entity Player = new Entity(100, 100, 3);
             HUDManager HUD = new HUDManager(Player);
+            ReviveChecker reviveChecker = new ReviveChecker(Player);
             bool running = true;
 
             void OnStart()
@@ -27,6 +28,7 @@ namespace HealthSystem
                 HUD.ShowHUD();
                 HUD.WaitForInput();
                 Player.TakeDamage(5);
+                reviveChecker.CheckForRevivesEveryUpdateForSomeReason();
             }
         }
     }
@@ -53,7 +55,19 @@ namespace HealthSystem
 
         public void TakeDamage(int damageTaken)
         {
-            health -= damageTaken;
+            int shieldSpillDamage;
+            if (shield > 0)
+            {
+                shield -= damageTaken;
+            }
+            else
+            {
+                health -= damageTaken;
+            }
+            // Don't call revive?????????
+            // Checker system seems inefficient as hell 
+            // Calling revive manually just doesn't work in reality so it's really just bad practice
+            // Checker system it is
         }
 
         void Heal(int amountHealed)
@@ -65,6 +79,16 @@ namespace HealthSystem
         {
             shield += shieldAmountHealed;
         }
+
+        public void Revive()
+        {
+            if (lives > 0)
+            {
+                health = maxHealth;
+                shield = maxShield;
+                lives -= 1;
+            }
+        }
     }
 
     class HUDManager
@@ -75,7 +99,7 @@ namespace HealthSystem
             this.Player = _Player;
         }
 
-        public void ClearHUD() // This is weird but works
+        public void ClearHUD() // This is a nasty solution but works
         {
             Console.SetCursorPosition(0, 0);
 
@@ -100,6 +124,24 @@ namespace HealthSystem
         public ConsoleKeyInfo WaitForInput()
         {
             return Console.ReadKey(true);
+        }
+    }
+
+    class ReviveChecker
+    {
+        Entity targetEntity;
+        public ReviveChecker(Entity _TargetEntity)
+        {
+            this.targetEntity = _TargetEntity;
+        }
+        public void CheckForRevivesEveryUpdateForSomeReason()
+        {
+            if (targetEntity.health <= 0) { 
+                targetEntity.health = 0;
+                if (targetEntity.lives > 0) {
+                    targetEntity.Revive();
+                }
+            }
         }
     }
 }
