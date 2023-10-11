@@ -11,7 +11,8 @@ namespace HealthSystem
         static void Main(string[] args)
         {
             Entity Player = new Entity(100, 100, 3);
-            HUDManager HUD = new HUDManager(Player);
+            HUDManager HUD = new HUDManager(Player); 
+            // HUDManager doesn't work with test code I bet, probably scrap for something simpler since there's no real input
             ReviveChecker reviveChecker = new ReviveChecker(Player);
             bool running = true;
 
@@ -55,7 +56,7 @@ namespace HealthSystem
 
         public void TakeDamage(int damageTaken)
         {
-            int shieldSpillDamage;
+            int shieldSpillDamage; // TODO make damage spill
             if (shield > 0)
             {
                 shield -= damageTaken;
@@ -82,12 +83,9 @@ namespace HealthSystem
 
         public void Revive()
         {
-            if (lives > 0)
-            {
-                health = maxHealth;
-                shield = maxShield;
-                lives -= 1;
-            }
+            health = maxHealth;
+            shield = maxShield;
+            lives -= 1;
         }
     }
 
