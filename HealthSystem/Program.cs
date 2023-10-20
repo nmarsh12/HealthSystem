@@ -11,34 +11,33 @@ namespace HealthSystem
     internal class Program
     {
         // Had to absolutely massacre my code to fit the test code, class based code should be in an older commit
-        static int maxHealth;
-        static int maxShield;
-        static int health;
-        static int shield;
-        static int lives;
-        static string healthStatus;
+        static int maxHealth = 100;
+        static int maxShield = 100;
+        static int health = maxHealth;
+        static int shield = maxShield;
+        static int lives = 3;
+        static string healthStatus = "Alive";
         static int xp = 0;
         static int level = 1;
 
         static void Main(string[] args)
         {
-            shield = 0;
-            health = 50;
-            lives = 3;
-            TakeDamage(10);
-            Console.WriteLine(shield);
-            Console.WriteLine(health);
             UnitTestHealthSystem();
             UnitTestXPSystem();
+            ShowHUD();
+            Console.WriteLine("Taking 20 Damage");
+            Console.WriteLine();
+            TakeDamage(20);
+            ShowHUD();
             Console.ReadKey();
         }
 
         static void ShowHUD()
         {
-            Console.WriteLine(health);
-            Console.WriteLine(shield);
-            Console.WriteLine(healthStatus);
-            Console.WriteLine(lives);
+            Console.WriteLine("Health: " + health);
+            Console.WriteLine("Shield: " + shield);
+            Console.WriteLine("Status: " + healthStatus);
+            Console.WriteLine("Lives: " + lives);
             Console.WriteLine();
         }
 
